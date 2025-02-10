@@ -25,4 +25,4 @@
 <p>Sinta-se à vontade para abrir issues e pull requests!</p>
 
 <hr>
-<p>Feito com ❤️ usando as melhores práticas do Android.</p>
+<p> ❤️ </p>
