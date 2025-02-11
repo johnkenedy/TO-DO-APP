@@ -24,17 +24,23 @@ import com.example.theclassicto_doapp.ui.components.ToDoItem
 import com.example.theclassicto_doapp.ui.theme.TheClassicTODOAPPTheme
 
 @Composable
-fun ListScreen() {
-    ListContent(emptyList())
+fun ListScreen(
+    navigateToAddEditScreen: (id: Long?) -> Unit
+) {
+    ListContent(
+        toDos = emptyList(),
+        onAddItemClick = navigateToAddEditScreen
+    )
 }
 
 @Composable
 fun ListContent(
-    toDos: List<ToDo> = emptyList()
+    toDos: List<ToDo>,
+    onAddItemClick: (id: Long?) -> Unit,
 ) {
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = { }) {
+            FloatingActionButton(onClick = { onAddItemClick(null) }) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "add")
             }
         }
@@ -63,7 +69,10 @@ fun ListContent(
 @Composable
 private fun ListContentPreview() {
     TheClassicTODOAPPTheme {
-        ListContent(todoListItems)
+        ListContent(
+            toDos = todoListItems,
+            onAddItemClick = {}
+            )
     }
 
 }
