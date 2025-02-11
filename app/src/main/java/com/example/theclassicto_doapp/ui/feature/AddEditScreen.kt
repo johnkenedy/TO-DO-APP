@@ -22,7 +22,7 @@ import com.example.theclassicto_doapp.ui.theme.TheClassicTODOAPPTheme
 
 @Composable
 fun AddEditScreen() {
-
+    AddEditContent()
 }
 
 @Composable
