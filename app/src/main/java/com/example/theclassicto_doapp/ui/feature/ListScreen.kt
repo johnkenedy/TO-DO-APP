@@ -25,7 +25,7 @@ import com.example.theclassicto_doapp.ui.theme.TheClassicTODOAPPTheme
 
 @Composable
 fun ListScreen() {
-
+    ListContent(emptyList())
 }
 
 @Composable
