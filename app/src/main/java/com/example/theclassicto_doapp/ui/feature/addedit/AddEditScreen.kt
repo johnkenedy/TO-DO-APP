@@ -19,9 +19,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.theclassicto_doapp.data.repository.ToDoRepositoryImpl
+import com.example.theclassicto_doapp.data.room.ToDoDataBaseProvider
 import com.example.theclassicto_doapp.ui.UiEvent
 import com.example.theclassicto_doapp.ui.theme.TheClassicTODOAPPTheme
 
@@ -29,6 +32,13 @@ import com.example.theclassicto_doapp.ui.theme.TheClassicTODOAPPTheme
 fun AddEditScreen(
     navigateBack: () -> Unit,
 ) {
+
+    val context = LocalContext.current.applicationContext
+    val dataBase = ToDoDataBaseProvider.provide(context)
+    val repository = ToDoRepositoryImpl(dataBase.toDoDao)
+    val viewModel = viewModel<AddEditViewModel> {
+        AddEditViewModel(repository)
+    }
 
     val title = viewModel.title
     val description = viewModel.description
@@ -38,7 +48,7 @@ fun AddEditScreen(
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { event ->
             when (event) {
-                is UiEvent.NavigateBack ->  { navigateBack }
+                is UiEvent.NavigateBack ->  { navigateBack() }
 
                 is UiEvent.ShowSnackBar -> {
                    snackBarHostState.showSnackbar(
@@ -105,7 +115,10 @@ fun AddEditContent(
                     .fillMaxWidth(),
                 value = description ?: "",
                 onValueChange = { description ->
-                    AddEditEvent.DescriptionChange(description)
+                    onEvent(
+                        AddEditEvent.DescriptionChange(description)
+                    )
+
                 },
                 placeholder = {
                     Text(text = "Description (optional)")
