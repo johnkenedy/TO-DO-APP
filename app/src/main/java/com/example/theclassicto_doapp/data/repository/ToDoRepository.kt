@@ -5,9 +5,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface ToDoRepository {
 
-    suspend fun insert(title: String, description: String?)
+    suspend fun insert(title: String, description: String?, id: Long? = null)
 
-    suspend fun updateCompleted(id: Long, isDone: Boolean)
+    suspend fun isDone(id: Long, isDone: Boolean)
 
     suspend fun delete(id: Long)
 
