@@ -12,6 +12,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -23,6 +24,9 @@ import com.example.theclassicto_doapp.data.repository.ToDoRepositoryImpl
 import com.example.theclassicto_doapp.data.room.ToDoDataBaseProvider
 import com.example.theclassicto_doapp.domain.ToDo
 import com.example.theclassicto_doapp.domain.todoListItems
+import com.example.theclassicto_doapp.navigation.AddEditRoute
+import com.example.theclassicto_doapp.navigation.ListRoute
+import com.example.theclassicto_doapp.ui.UiEvent
 import com.example.theclassicto_doapp.ui.components.ToDoItem
 import com.example.theclassicto_doapp.ui.theme.TheClassicTODOAPPTheme
 
@@ -39,20 +43,42 @@ fun ListScreen(
 
     val toDos by viewModel.toDos.collectAsState()
 
+    LaunchedEffect(Unit) {
+        viewModel.uiEvent.collect { uiEvent ->
+            when (uiEvent) {
+                is UiEvent.Navigate<*> -> {
+                    when(uiEvent.route) {
+                        is AddEditRoute -> {
+                            navigateToAddEditScreen(uiEvent.route.id)
+                        }
+                    }
+                }
+                is UiEvent.NavigateBack -> {
+
+                }
+                is UiEvent.ShowSnackBar -> {
+
+                }
+            }
+        }
+    }
+
     ListContent(
         toDos = toDos,
-        onAddItemClick = navigateToAddEditScreen
+        onEvent = viewModel::onEvent
     )
 }
 
 @Composable
 fun ListContent(
     toDos: List<ToDo>,
-    onAddItemClick: (id: Long?) -> Unit,
+    onEvent: (ListEvent) -> Unit,
 ) {
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = { onAddItemClick(null) }) {
+            FloatingActionButton(onClick = {
+                onEvent(ListEvent.AddEdit(null))
+            }) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "add")
             }
         }
@@ -64,9 +90,15 @@ fun ListContent(
             itemsIndexed(toDos) { index, toDo ->
                 ToDoItem(
                     toDo = toDo,
-                    onCompletedChange = { toDo.isDone },
-                    onItemClick = {},
-                    onDeleteClick = {}
+                    onCompletedChange = {
+                        onEvent(ListEvent.IsDoneChanged(toDo.id, it))
+                    },
+                    onItemClick = {
+                        onEvent(ListEvent.AddEdit(toDo.id))
+                    },
+                    onDeleteClick = {
+                        onEvent(ListEvent.Delete(toDo.id))
+                    }
                 )
 
                 if (index < toDos.lastIndex) {
@@ -83,7 +115,7 @@ private fun ListContentPreview() {
     TheClassicTODOAPPTheme {
         ListContent(
             toDos = todoListItems,
-            onAddItemClick = {}
+            onEvent = {}
             )
     }
 

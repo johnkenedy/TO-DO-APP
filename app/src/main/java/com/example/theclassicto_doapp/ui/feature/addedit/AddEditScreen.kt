@@ -30,6 +30,7 @@ import com.example.theclassicto_doapp.ui.theme.TheClassicTODOAPPTheme
 
 @Composable
 fun AddEditScreen(
+    id: Long?,
     navigateBack: () -> Unit,
 ) {
 
@@ -37,7 +38,10 @@ fun AddEditScreen(
     val dataBase = ToDoDataBaseProvider.provide(context)
     val repository = ToDoRepositoryImpl(dataBase.toDoDao)
     val viewModel = viewModel<AddEditViewModel> {
-        AddEditViewModel(repository)
+        AddEditViewModel(
+            id = id,
+            repository = repository
+        )
     }
 
     val title = viewModel.title
@@ -48,16 +52,18 @@ fun AddEditScreen(
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { event ->
             when (event) {
-                is UiEvent.NavigateBack ->  { navigateBack() }
-
-                is UiEvent.ShowSnackBar -> {
-                   snackBarHostState.showSnackbar(
-                       message = event.message,
-                       withDismissAction = true
-                   )
+                is UiEvent.NavigateBack -> {
+                    navigateBack()
                 }
 
-                is UiEvent.Navigate<*> -> {  }
+                is UiEvent.ShowSnackBar -> {
+                    snackBarHostState.showSnackbar(
+                        message = event.message,
+                        withDismissAction = true
+                    )
+                }
+
+                is UiEvent.Navigate<*> -> {}
             }
         }
     }

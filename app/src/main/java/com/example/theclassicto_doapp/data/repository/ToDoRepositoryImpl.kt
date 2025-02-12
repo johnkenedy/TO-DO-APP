@@ -11,8 +11,13 @@ class ToDoRepositoryImpl(
     private val dao: ToDoDao
 ) : ToDoRepository {
 
-    override suspend fun insert(title: String, description: String?) {
-        val entity = ToDoEntity(
+    override suspend fun insert(title: String, description: String?, id: Long?) {
+        val entity = id?.let {
+            dao.getBy(it)?.copy(
+                title = title,
+                description = description
+            )
+        } ?: ToDoEntity(
             title = title,
             description = description,
             isDone = false
@@ -21,7 +26,7 @@ class ToDoRepositoryImpl(
         dao.insert(entity)
     }
 
-    override suspend fun updateCompleted(id: Long, isDone: Boolean) {
+    override suspend fun isDone(id: Long, isDone: Boolean) {
         val existingEntity = dao.getBy(id) ?: return
         val updatedEntity = existingEntity.copy(isDone = isDone)
         dao.insert(updatedEntity)
