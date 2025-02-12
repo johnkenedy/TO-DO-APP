@@ -1,23 +1,26 @@
-package com.example.theclassicto_doapp.ui.feature
+package com.example.theclassicto_doapp.ui.feature.list
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.theclassicto_doapp.data.repository.ToDoRepositoryImpl
+import com.example.theclassicto_doapp.data.room.ToDoDataBaseProvider
 import com.example.theclassicto_doapp.domain.ToDo
 import com.example.theclassicto_doapp.domain.todoListItems
 import com.example.theclassicto_doapp.ui.components.ToDoItem
@@ -27,8 +30,17 @@ import com.example.theclassicto_doapp.ui.theme.TheClassicTODOAPPTheme
 fun ListScreen(
     navigateToAddEditScreen: (id: Long?) -> Unit
 ) {
+    val context = LocalContext.current.applicationContext
+    val dataBase = ToDoDataBaseProvider.provide(context)
+    val repository = ToDoRepositoryImpl(dataBase.toDoDao)
+    val viewModel = viewModel<ListViewModel> {
+        ListViewModel(repository)
+    }
+
+    val toDos by viewModel.toDos.collectAsState()
+
     ListContent(
-        toDos = emptyList(),
+        toDos = toDos,
         onAddItemClick = navigateToAddEditScreen
     )
 }

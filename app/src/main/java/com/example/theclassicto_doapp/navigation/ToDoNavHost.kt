@@ -6,7 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.example.theclassicto_doapp.ui.feature.addedit.AddEditScreen
-import com.example.theclassicto_doapp.ui.feature.ListScreen
+import com.example.theclassicto_doapp.ui.feature.list.ListScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
