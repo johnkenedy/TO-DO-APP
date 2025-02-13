@@ -6,8 +6,9 @@ import com.example.theclassicto_doapp.domain.ToDo
 import com.example.theclassicto_doapp.domain.util.ToDoMapper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class ToDoRepositoryImpl(
+class ToDoRepositoryImpl @Inject constructor(
     private val dao: ToDoDao
 ) : ToDoRepository {
 

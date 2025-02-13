@@ -16,30 +16,21 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.theclassicto_doapp.data.repository.ToDoRepositoryImpl
-import com.example.theclassicto_doapp.data.room.ToDoDataBaseProvider
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.theclassicto_doapp.domain.ToDo
 import com.example.theclassicto_doapp.domain.todoListItems
 import com.example.theclassicto_doapp.navigation.AddEditRoute
-import com.example.theclassicto_doapp.navigation.ListRoute
 import com.example.theclassicto_doapp.ui.UiEvent
 import com.example.theclassicto_doapp.ui.components.ToDoItem
 import com.example.theclassicto_doapp.ui.theme.TheClassicTODOAPPTheme
 
 @Composable
 fun ListScreen(
+    viewModel: ListViewModel = hiltViewModel(),
     navigateToAddEditScreen: (id: Long?) -> Unit
 ) {
-    val context = LocalContext.current.applicationContext
-    val dataBase = ToDoDataBaseProvider.provide(context)
-    val repository = ToDoRepositoryImpl(dataBase.toDoDao)
-    val viewModel = viewModel<ListViewModel> {
-        ListViewModel(repository)
-    }
 
     val toDos by viewModel.toDos.collectAsState()
 
