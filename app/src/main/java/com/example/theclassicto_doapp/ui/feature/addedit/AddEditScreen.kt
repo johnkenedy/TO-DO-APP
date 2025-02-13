@@ -19,30 +19,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.theclassicto_doapp.data.repository.ToDoRepositoryImpl
-import com.example.theclassicto_doapp.data.room.ToDoDataBaseProvider
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.theclassicto_doapp.ui.UiEvent
 import com.example.theclassicto_doapp.ui.theme.TheClassicTODOAPPTheme
 
 @Composable
 fun AddEditScreen(
-    id: Long?,
+    viewModel: AddEditViewModel = hiltViewModel(),
     navigateBack: () -> Unit,
 ) {
-
-    val context = LocalContext.current.applicationContext
-    val dataBase = ToDoDataBaseProvider.provide(context)
-    val repository = ToDoRepositoryImpl(dataBase.toDoDao)
-    val viewModel = viewModel<AddEditViewModel> {
-        AddEditViewModel(
-            id = id,
-            repository = repository
-        )
-    }
 
     val title = viewModel.title
     val description = viewModel.description

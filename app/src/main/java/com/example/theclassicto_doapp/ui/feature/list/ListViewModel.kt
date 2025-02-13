@@ -5,13 +5,16 @@ import androidx.lifecycle.viewModelScope
 import com.example.theclassicto_doapp.data.repository.ToDoRepository
 import com.example.theclassicto_doapp.navigation.AddEditRoute
 import com.example.theclassicto_doapp.ui.UiEvent
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ListViewModel(
+@HiltViewModel
+class ListViewModel @Inject constructor(
     private val repository: ToDoRepository
 ) : ViewModel() {
 

@@ -12,24 +12,4 @@ import androidx.room.RoomDatabase
 abstract class ToDoDataBase: RoomDatabase() {
 
     abstract val toDoDao: ToDoDao
-
-}
-
-object ToDoDataBaseProvider {
-
-    @Volatile
-    private var INSTANCE: ToDoDataBase? = null
-
-    fun provide(context: Context): ToDoDataBase {
-        return INSTANCE ?: synchronized(this) {
-            val instance = Room.databaseBuilder(
-                context.applicationContext,
-                ToDoDataBase::class.java,
-                "todo_database"
-            ).build()
-            INSTANCE = instance
-            instance
-        }
-    }
-
 }
